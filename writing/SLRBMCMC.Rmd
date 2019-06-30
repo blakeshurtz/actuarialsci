@@ -1,0 +1,44 @@
+---
+title: "Stochastic Loss Reserving with Bayesian MCMC"
+author: "Blake Shurtz"
+date: "June 29, 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+There is an inherent uncertainty in loss reserve forcasting due to unknown future costs. These costs can include future claims, claim re-evaluations by third parties and litigation. Over the past three decades, stochastic models have adopted to quantify the uncertainty in future developments, with mixed results (1).
+
+Bayesian stochastic models entered actuarial science in the early 2000's. Using outcome data as a method to validate 10-year loss reserve predictions, Meyers finds that Bayesian stochastic models compare favorably to more traditional models.
+
+This paper tests a multi-level Bayesian stochastic models to predicting loss reserves using the same groups that Meyers studied (Appendix A). It applies a multi-level approach to the problem of different business environments. This work closely follows the Meyers monograph, and compares results to his models built in JAGs.
+
+###The Model
+
+Estimating loss, either incurred or paid. For year w, development lag d. The aptly-named chain ladder method constructs a cost function that that is a ratio of the cumulative sum of the losses through periods d+1/d.
+
+The assumptions of this model include the naive expectation that the loss in the next period is a function of past periods, that, for a given line of insurance, each year is independent, and the variance is conditional on the fixed effect of the model.  
+
+The results of the models are visualized has ideally uniform histograms representing the predicted percentiles: "The model is used to predict a distribution of outcomes
+that we will observe in the future. When we do observe outcomes for a large number of
+predictions, we expect the percentiles of the outcomes to be uniformly distributed. If they are not uniformly distributed, we look for a better model." 
+
+The Mack model underestimated the variability in actual loss estimates. Meyers argues it does this for two reasons:
+1. The level of the accident year is a fixed, not random, variable.
+2. The correlation between accident years is assumed to be 0, ie. are independent.
+
+The Bayesian approach models the distribution of the final loss amount directly. It allows for the year to be a varying-intercept model, removing the fixed-effect constraint while also allowing for partial pooling across years. Hence the name the correlated chain-ladder model.
+
+I will be making two adjustments to the model in order to see any change in predicted accuracy. Rather than set wide uniform priors on the development lag effects, adaptive priors are adopted. Also, rather than set a uniform hyperparameter for sigma, cauchy priors will be used instead. 
+
+Interestingly, models are run on a per-insurer basis, rather than all insurers at once. It would be of interest in future research on insurers to compile assessments of risks and benefits at the insurer level.
+
+
+#r plots comparing histograms and pp plots
+#table with zig-zag
+
+
+
+
