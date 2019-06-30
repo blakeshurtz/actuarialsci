@@ -12,9 +12,8 @@ for (i in 2:length(w)){
 mu[i]<-alpha[w[i]]+beta[d[i]]+rho*(logloss[i-1]-mu[i-1])*wne1[i]
 logloss[i]~dnorm(mu[i],1/sig2[i])
 }
-#
-# set up sig2
-#
+
+### set up sig2
 for (i in 1:length(w)){
 sig2[i]<-sigd2[d[i]]
 }
@@ -31,10 +30,14 @@ a[k]~dunif(0.000001,1)
 for (i in 1:numlev){
 alpha[i]~dnorm(log(premium[i])+logelr,.1)
 }
-logelr~dunif(-1.5,0.5)
+logelr~dnorm(logelr_mean,logelr_sig)
+logelr_mean ~ dnorm(0,1)
+logelr_sig ~ dunif(0,2)
 #
 for (i in 1:9){
-beta[i]~dunif(-5,5)
+beta[i]~dnorm(beta_mu[i],beta_sig[i])
+beta_mu[i] ~ dnorm(0,1)
+beta_sig[i] ~ dunif(0,2)
 }
 beta[10]<-0 
 rho~dunif(-1,1)

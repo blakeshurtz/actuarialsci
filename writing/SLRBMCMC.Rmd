@@ -1,5 +1,5 @@
 ---
-title: "Stochastic Loss Reserving with Bayesian MCMC"
+title: "Evidence that Correlated Chain Ladders with Adaptive Priors Can Improve Loss Reserve Forecast Predictive Accuracy"
 author: "Blake Shurtz"
 date: "June 29, 2019"
 output: pdf_document
@@ -34,6 +34,10 @@ The Bayesian approach models the distribution of the final loss amount directly.
 I will be making two adjustments to the model in order to see any change in predicted accuracy. Rather than set wide uniform priors on the development lag effects, adaptive priors are adopted. Also, rather than set a uniform hyperparameter for sigma, cauchy priors will be used instead. 
 
 Interestingly, models are run on a per-insurer basis, rather than all insurers at once. It would be of interest in future research on insurers to compile assessments of risks and benefits at the insurer level.
+
+
+###adaptive priors for alpha, beta, sigma, and logelr.
+Prior choice recommendations.
 
 
 #r plots comparing histograms and pp plots

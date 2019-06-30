@@ -1,4 +1,18 @@
-###function to get Schedule P triangle data given ins group and line of business
+###is there a better way to import these libraries? Packrat?
+library(coda)
+library(ChainLadder)
+library(runjags)
+
+#models are executed on a per-insurer basis. Define variables for industry and group. See Appendix A for groups included in model
+setwd("data")
+insurer.data="comauto_pos.csv"
+grpcode="353"
+
+#import data
+a=read.csv(insurer.data)
+setwd("..")
+
+#extract Schedule P triangle data
 ins.line.data=function(g.code){
   b=subset(a,a$GRCODE==g.code)
   name=b$GRNAME; grpcode=b$GRCODE
@@ -23,26 +37,24 @@ ins.line.data=function(g.code){
   return(data.out)
 }
 
-###read and aggregate the insurer data and set up training and test data frames
-#filter data by insurer
+#extract triangle
 cdata=ins.line.data(grpcode)
 w=cdata$w-1987; d=cdata$d #index year and development lag at 1
-
-###order the data by development, then year
-o1=100*d+w; o=order(o1); w=w[o]; d=d[o]
-
-###construct data frame for incurred loss triangle
+o1=100*d+w; o=order(o1); w=w[o]; d=d[o] #order the data by development, then year
 premium=cdata$net_premium[o] #premium
 cpdloss=cdata$cum_pdloss[o] #cumulative paid loss
-cpdloss=pmax(cpdloss,1) #parallel max compared to 1
-###create new variable incremental loss- incurred losses net of reinsurance 
-incloss=cdata$cum_incloss[o]-cdata$bulk_loss[o] #this is the data plotted in the triangle
-incloss=pmax(incloss,1)
+cpdloss=pmax(cpdloss,1) #parallel max order
 wne1=ifelse(w==1,0,1) #first year, yes or no
+
+#create new variable incremental loss- incurred losses net of reinsurance, this is what shows up in triangle
+incloss=cdata$cum_incloss[o]-cdata$bulk_loss[o] 
+incloss=pmax(incloss,1) 
+
+#data frame containing both current known and future known losses 
 adata=data.frame(grpcode,w,d,premium,cpdloss,incloss,wne1)
 
-###construct data frame for model, containing known outcomes only 
-rdata=subset(adata,(adata$w+adata$d)<12) #what we knew at the time (above triangle)
+#construct SECOND data frame for model, containing current known outcomes only 
+rdata=subset(adata,(adata$w+adata$d)<12)
 numw=length(unique(rdata$w))
-rloss=rdata$incloss 
-aloss=adata$incloss
+rloss=rdata$incloss; aloss=adata$incloss
+

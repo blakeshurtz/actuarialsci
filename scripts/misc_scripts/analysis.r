@@ -1,4 +1,4 @@
-###optional diagnostics
+###DO NOT USE. This script has been abandoned and the code has been moved into the model script jags_xxx.r
 crosscorr.plot(jagout$mcmc)
 
 ###parameter estimates
@@ -45,7 +45,7 @@ CCL.S.E.=round(ss.wd10)
 CCL.CV=round(CCL.S.E./CCL.Estimate,4)
 act=sum(subset(aloss,adata$d==10)[1:10])
 pct.CCL=sum(Pred.CCL<=act)/length(Pred.CCL)*100
-
+pct.CCL
 
 ###put CCL accident year statistics into a data frame
 W=c(1:10,"Total")
@@ -65,5 +65,5 @@ hist(Pred.CCL,main="Predictive Distribution of Outcomes",xlab="")
 
 ###optional data export
 setwd("results")
-write.csv(risk,file="outfile.csv",row.names=F)
+write.csv(risk,file="outfilestan5.csv",row.names=F)
 setwd("..")
