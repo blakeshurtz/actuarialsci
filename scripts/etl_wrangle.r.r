@@ -52,6 +52,7 @@ incloss=pmax(incloss,1)
 
 #data frame containing both current known and future known losses 
 adata=data.frame(grpcode,w,d,premium,cpdloss,incloss,wne1)
+write.csv(adata, "353.csv")
 
 #construct SECOND data frame for model, containing current known outcomes only 
 rdata=subset(adata,(adata$w+adata$d)<12)

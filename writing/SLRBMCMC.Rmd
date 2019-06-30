@@ -1,47 +1,64 @@
 ---
-title: "Evidence that Correlated Chain Ladders with Adaptive Priors Can Improve Loss Reserve Forecast Predictive Accuracy"
+title: Evidence that Correlated Chain Ladders with Adaptive Priors Can Improve Loss
+  Reserve Forecast Predictive Accuracy
 author: "Blake Shurtz"
 date: "June 29, 2019"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
+library(knitr)
 knitr::opts_chunk$set(echo = TRUE)
+setwd("D:/Google Drive/Statistics/actuarialsci/writing")
 ```
 
-There is an inherent uncertainty in loss reserve forcasting due to unknown future costs. These costs can include future claims, claim re-evaluations by third parties and litigation. Over the past three decades, stochastic models have adopted to quantify the uncertainty in future developments, with mixed results (1).
+##Abstract
+This paper investigates the substitution of adaptive priors for standard uninformed priors in an application of Bayesian stochastic loss reserve forecasting. Results show that both methods work similarly well in comparison to more analytical methods. However, both models generate outliers in loss prediction for lower-value claims. 
 
-Bayesian stochastic models entered actuarial science in the early 2000's. Using outcome data as a method to validate 10-year loss reserve predictions, Meyers finds that Bayesian stochastic models compare favorably to more traditional models.
+##Intro
+Unknown future costs, including claim re-evaluations and delayed litigatio, create uncertainty in loss reserve forcasting. Chain ladders are cost functions (Mack 1991) that predict the next incurred losses in period d + 1 in a given year. 
 
-This paper tests a multi-level Bayesian stochastic models to predicting loss reserves using the same groups that Meyers studied (Appendix A). It applies a multi-level approach to the problem of different business environments. This work closely follows the Meyers monograph, and compares results to his models built in JAGs.
+```{r, echo=FALSE}
+include_graphics("chainladder/chainladder.png")
+```
+
+The assumptions of this model include the naive expectation that the loss in the next period is a function of past periods, that, for a given line of insurance, each year is independent, and the variance is conditional on the fixed effect of the model. 
+
+Over the last two decades, stochastic and Bayesian stochastic models have been adopted by the actuarial science community. Buiding on Mack, Meyers finds that Bayesian stochastic models provide favorably more uniform predictions compared to strictly analytical models. It does this by relaxing the fixed effect assumption for accident year and allowing dependence (Rho) among accident years.
+
+
+###Data
+
+The loss reserving data comes directly from the Casualty Actuarial Society database, NAIC Schedule P. There are data sets for six industries. However, for the purposes of this analysis, the commerical auto data set was the only set analyzed. Insurance groups were selected in order to exclude observations where exogenous changes in business practices may have occurred. (Meyers)
 
 ###The Model
 
-Estimating loss, either incurred or paid. For year w, development lag d. The aptly-named chain ladder method constructs a cost function that that is a ratio of the cumulative sum of the losses through periods d+1/d.
+This paper makes a small contribution of testing Meyer's model and data using adaptive priors. 
 
-The assumptions of this model include the naive expectation that the loss in the next period is a function of past periods, that, for a given line of insurance, each year is independent, and the variance is conditional on the fixed effect of the model.  
+```{r, echo=FALSE}
+include_graphics("correlatedchainladder/mathtype.png")
+```
 
-The results of the models are visualized has ideally uniform histograms representing the predicted percentiles: "The model is used to predict a distribution of outcomes
-that we will observe in the future. When we do observe outcomes for a large number of
-predictions, we expect the percentiles of the outcomes to be uniformly distributed. If they are not uniformly distributed, we look for a better model." 
+Rather than setting $\alpha_w$ as a function of a fixed premium, it is given its own adaptive priors that are a function of the data. Furthermore, variance hyperparameters $\sigma_\alpha$ and $\sigma_\beta$ have been given exponential, rather than uniform, distributions. 
 
-The Mack model underestimated the variability in actual loss estimates. Meyers argues it does this for two reasons:
-1. The level of the accident year is a fixed, not random, variable.
-2. The correlation between accident years is assumed to be 0, ie. are independent.
+###Results
 
-The Bayesian approach models the distribution of the final loss amount directly. It allows for the year to be a varying-intercept model, removing the fixed-effect constraint while also allowing for partial pooling across years. Hence the name the correlated chain-ladder model.
+Both Meyers original CCL model and the adaptive prior model were executed. Results for Meyers model exactly matched the original monograph. The adaptive prior model usually generated similar, but not identical results.
 
-I will be making two adjustments to the model in order to see any change in predicted accuracy. Rather than set wide uniform priors on the development lag effects, adaptive priors are adopted. Also, rather than set a uniform hyperparameter for sigma, cauchy priors will be used instead. 
+```{r}
+include_graphics("images/Diffplot.jpeg")
+```
 
-Interestingly, models are run on a per-insurer basis, rather than all insurers at once. It would be of interest in future research on insurers to compile assessments of risks and benefits at the insurer level.
+A paired t-test rejects the hypothesis that the variation is different between models (p=0.42, df=47).
 
+Both tests made large errors in modeling 
 
-###adaptive priors for alpha, beta, sigma, and logelr.
-Prior choice recommendations.
+```{r, echo=FALSE}
+include_graphics("table/table.png")
+```
 
-
-#r plots comparing histograms and pp plots
-#table with zig-zag
 
 
 
